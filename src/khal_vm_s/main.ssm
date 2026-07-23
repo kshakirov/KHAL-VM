@@ -1,0 +1,34 @@
+(import (chezscheme))
+
+;; Наш опкод
+(define OP_PRINT #x0A)
+
+;; Пулл строк ВМ
+(define string-pool (vector "Привет, мир! (KHAL-VM Scheme)"))
+
+;; Системные ресурсы
+(define registers (make-vector 256 0))
+(define instruction-pointer 0)
+
+;; Байт-код: список пар (Opcode . RegIndex)
+(define bytecode (vector '( #x0A . 0 )))
+
+;; Помещаем в регистр R0 индекс строки 0
+(vector-set! registers 0 0)
+
+(display "[LAUNCH] 📡 KHAL-VM (Scheme) активирована в изолированной среде.\n")
+
+;; Цикл интерпретатора
+(let loop ()
+  (if (< instruction-pointer (vector-length bytecode))
+      (let* ((instruction (vector-ref bytecode instruction-pointer))
+             (opcode (car instruction))
+             (reg-idx (cdr instruction)))
+        (cond
+         ((= opcode OP_PRINT)
+          (let ((string-index (vector-ref registers reg-idx)))
+            (format #t "[VM OUTPUT] 🖖 ~a\n" (vector-ref string-pool string-index)))))
+        (set! instruction-pointer (+ instruction-pointer 1))
+        (loop))))
+
+(format #t "[READY]  🔋 Выполнение завершено. IP = 0x~x.\n" instruction-pointer)

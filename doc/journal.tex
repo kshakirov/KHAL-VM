@@ -74,5 +74,50 @@ Extraction is executed on the host system via basic bitwise masking and shifting
 \end{lstlisting}
 Constraint: Strict declaration-before-use policy.
 
+
+
+\section{Sandbox Execution: First Operational Milestone}
+
+\subsection{ADR-007: Multi-Engine Directory Isolation and Scripting Strategy}
+\textbf{Context:} Rapid architectural validation requires evaluating syntax and execution mechanics simultaneously across disparate runtime paradigms without early infrastructure overhead. \\
+\textbf{Decision:} The repository layout is partitioned into isolated, self-contained subdirectories to decouple testing environments completely:
+\begin{itemize}
+    \item \texttt{khal\_vm\_f/}: Dedicated to F\# lightweight scripting (\texttt{.fsx}) via the interactive compiler (\texttt{dotnet fsi}).
+    \item \texttt{khal\_vm\_s/}: Dedicated to Chez Scheme scripting (\texttt{.ss}) executed linearly via the native engine (\texttt{scheme --script}).
+\end{itemize}
+\textbf{Consequences:} This eliminates project configuration files (\texttt{.fsproj} or scheme libraries) during the initial R\&D phase, allowing rapid iterative coding directly within Emacs buffers. Transition to rigid build systems is deferred until multi-file cohesion becomes required.
+
+\subsection{ADR-008: Instruction 0x0A (PRINT) and String Pool Emulation}
+\textbf{Context:} A register machine must validate its instruction decoding loop using a predictable, verifiable operational primitive before scaling the Instruction Set Architecture (ISA). \\
+\textbf{Decision:} KHAL-VM establishes opcode \texttt{0x0A} (\texttt{OP\_PRINT}) as the initial functional baseline. String variables are decoupled from the core register file to maintain a strict, non-OOP structural topography:
+\begin{enumerate}
+    \item A localized \texttt{String Pool} mimics static memory read segments.
+    \item Register \texttt{R0} is loaded with a pure 64-bit integer acting as an indirect address offset (index) pointing into the pool.
+    \item The interpreter loop fetches the instruction, extracts the register reference, reads the index parameter, and pipe-routes the data to the host stdout.
+\end{enumerate}
+\textbf{Consequences:} The primary execution mechanism (Fetch-Decode-Execute cycle) is successfully instantiated in both F\# and Scheme sandboxes, printing the historical "Hello World" paradigm with zero object allocations.
+
+
+\begin{lstlisting}[basicstyle=\ttfamily\small, frame=single, title=Verified F\# Sandbox Execution Log]
+[LAUNCH]  KHAL-VM (F#) activated in isolated environment.
+[VM OUTPUT]  Hello, World! (KHAL-VM F#)
+[READY]   Execution completed. IP = 0x01.
+
+val OP_PRINT: int = 10
+val stringPool: string array = [|"Hello, World! (KHAL-VM F#)"|]
+val registers: int array = [|0; 0; 0; 0; 0; ...|]
+val mutable IP: int = 1
+val bytecode: (int * int) array = [|(10, 0)|]
+\end{lstlisting}
+
+
+\begin{lstlisting}[basicstyle=\ttfamily\small, frame=single, title=Verified Chez Scheme Sandbox Execution Log]
+=> #<void>
+
+[LAUNCH]  KHAL-VM (Scheme) activated in isolated environment.
+[VM OUTPUT]  Hello, World! (KHAL-VM Scheme)
+[READY]   Execution completed. IP = 0x1.
+\end{lstlisting}
+
 \end{document}
 

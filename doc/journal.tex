@@ -1,0 +1,78 @@
+\documentclass[12pt,a4paper]{article}
+
+% --- Basic Packages (Strict ASCII, no unicode hooks) ---
+\usepackage[utf8]{inputenc} % Keep source code clean, but we stick to pure LaTeX commands for math/symbols
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{geometry}
+\usepackage{listings}
+
+\geometry{margin=1in}
+
+\title{\textbf{Project KHAL-VM: Architecture Decision Records}}
+\author{Kirill \and HAL-9000}
+\date{July 2026}
+
+\begin{document}
+
+\maketitle
+
+\thispagestyle{empty}
+\newpage
+\pagestyle{plain}
+
+\section{Introduction and Development Strategy}
+Project KHAL-VM is a research functional virtual machine designed iteratively from scratch. The development roadmap follows three distinct evolutionary steps:
+\begin{enumerate}
+    \item \textbf{Sandbox Phase:} Rapid prototyping of execution core, Instruction Set Architecture (ISA), and frontend syntax within the Emacs environment using light scripting engines (F\# or Chez Scheme).
+    \item \textbf{Metropolis Phase:} Complete transition of the proven architecture to pure C++ based on Bjarne Stroustrup's principles (RAII resource management) and Alexander Stepanov's paradigms (mathematical rigor and generalized algorithms).
+\end{enumerate}
+
+\section{Core Architectural Decisions (ADR)}
+
+\subsection{ADR-001: Register-Based Execution Model}
+\textbf{Context:} Traditional managed virtual machines (e.g., JVM, CLR) utilize stack-based bytecode for compiler simplicity. This introduces substantial memory thrashing (via continuous PUSH/POP cycles) and high instruction density. \\
+\textbf{Decision:} KHAL-VM implements a pure \textbf{register-based bytecode format}, drawing inspiration from LuaJIT and Erlang BEAM. \\
+\textbf{Consequences:} The instruction count per execution block drops by 2--3x. Dispatch loop pressure on the interpreter is minimized. The trade-off is shifted toward a more complex register allocation mechanism.
+
+\subsection{ADR-002: Hybrid Memory Topography}
+\textbf{Context:} Physical hardware operates on combined stack/register logic. High-frequency functional invocations require lightweight state transition. \\
+\textbf{Decision:} KHAL-VM bifurcates its execution storage:
+\begin{enumerate}
+    \item \textbf{Register File (256 slots):} Utilized for localized evaluation and pure, static functions. Arguments are passed with zero-cost overhead via register window overlapping.
+    \item \textbf{Call Stack (1024 frames):} Dedicated strictly to control flow tracking, Instruction Pointer (IP) state preservation, and execution context storage.
+\end{enumerate}
+
+\subsection{ADR-003: Tagged Hardware Architecture}
+\textbf{Context:} Offloading type checking completely to static compilation stages complicates the frontend and limits runtime flexibility. \\
+\textbf{Decision:} Mirroring vintage Lisp-machine designs, every KHAL-VM register contains two fixed components: \texttt{Tag} (1 byte, type descriptor) and \texttt{Bits} (8 bytes, raw payload data). \\
+\textbf{Consequences:} Attempting operations on incompatible registers triggers an immediate hardware-level interrupt. The frontend compiler is completely stripped of heavy type-checking logic.
+
+\subsection{ADR-004: 64-bit Mathematical Payload Layout}
+\textbf{Context:} Efficient bitwise arithmetic is required for basic numerical types. \\
+\textbf{Decision:} Three core tags are established for the initial mathematical unit:
+\begin{itemize}
+    \item \texttt{TAG\_INT} (0x01): Standard 64-bit signed integer storage.
+    \item \texttt{TAG\_FIXED} (0x02): Fixed-point layout (32-bit integer, 32-bit fractional partition) utilizing integer ALU speeds.
+    \item \texttt{TAG\_RATIONAL} (0x03): Strict fractional precision. The payload is divided precisely in half: upper 32 bits store the \textbf{Numerator}, lower 32 bits store the \textbf{Denominator}. 
+\end{itemize}
+Extraction is executed on the host system via basic bitwise masking and shifting operations:
+\begin{align}
+    \text{Denominator} &= \text{Bits} \ \& \ \text{0xFFFFFFFF} \\
+    \text{Numerator} &= \text{Bits} \ >> \ 32
+\end{align}
+
+\subsection{ADR-005: Wirthian Lisp Frontend Compiler}
+\textbf{Context:} A parser is required to map standard S-expressions directly into register instructions. \\
+\textbf{Decision:} KHAL-VM integrates a prefix Lisp syntax but compiles it following Niklaus Wirth's constraints --- strictly in \textbf{one single pass} without constructing an Abstract Syntax Tree (AST) in heap memory. \\
+\textbf{Consequences:} For example, the expression \texttt{(* (+ a b) c)} is parsed linearly from left to right. Upon reaching a closing parenthesis, the compiler immediately emits specific register operations:
+\begin{lstlisting}[basicstyle=\ttfamily]
+1. ADD R1, a, b
+2. MUL R2, R1, c
+\end{lstlisting}
+Constraint: Strict declaration-before-use policy.
+
+\end{document}
+

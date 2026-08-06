@@ -2,6 +2,7 @@
 using namespace  std;
 #include <iostream>
 #include "frontend.hpp"
+#include "vm.hpp"
 #include <vector>
 int main(int argc, char** argv){
   
@@ -10,7 +11,8 @@ int main(int argc, char** argv){
   }else {
     cout << "KHAL-VM: You provided an expression " << argv[1]
          << "  working on it ..." << endl;
-    
+
     auto r = compile(argv[1]);
+    execute(r);
   }
 }

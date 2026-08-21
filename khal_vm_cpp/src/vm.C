@@ -17,6 +17,7 @@ void execute(vector<uint32_t> bytecode) {
       std::cout << *it << " "; // Output: 30 40 50
       registers[i].tag = 1;
       registers[i].bytes[0]= *it;
+      i++;
       
     }
 }

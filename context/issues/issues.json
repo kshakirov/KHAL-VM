@@ -1,0 +1,120 @@
+[
+  {
+    "assignees": [
+      {
+        "id": "MDQ6VXNlcjEyNzczNDU=",
+        "login": "kshakirov",
+        "name": "likealight",
+        "databaseId": 1277345
+      }
+    ],
+    "author": {
+      "id": "MDQ6VXNlcjEyNzczNDU=",
+      "is_bot": false,
+      "login": "kshakirov",
+      "name": "likealight"
+    },
+    "body": "# 🏁 Веха №1: Нативный C++ Скелет и Первая Арифметика (Milestone 1)\n**Описание:** Оживить каркас файлов KHAL-VM, запустить сквозной проход от строки REPL до вывода результата, реализовать тэгированные регистры и сложение дробей на битовых масках.\n\n---\n\n## 🎫 Тикет №1: Реализация главного процесса в `main.C` и системы логов\n**Назначение:** Оживить точку входа и настроить интерфейс командной строки.\n\n### 📝 Задачи:\n- [ ] Подключить базовые библиотеки `<iostream>` и `<cstdint>`.\n- [ ] Прописать функцию `int main(int argc, char* argv[])`.\n- [ ] Реализовать проверку CLI-параметров: если строка пустая, выводить справку по использованию.\n- [ ] Вывести стартовый космический лог инициализации `[LAUNCH]` на чистом C++.\n- [ ] Настроить вызов заглушек компилятора (`compile`) и виртуальной машины (`execute`).\n\n---\n\n\n",
+    "closedAt": "2026-08-06T20:22:07Z",
+    "closedByPullRequestsReferences": [],
+    "comments": [],
+    "createdAt": "2026-08-06T18:49:51Z",
+    "labels": [],
+    "milestone": {
+      "number": 1,
+      "title": "Веха №1: Нативный C++ Скелет и Первая Арифметика (Milestone 1)",
+      "description": "**Описание:** Оживить каркас файлов KHAL-VM, запустить сквозной проход от строки REPL до вывода результата, реализовать тэгированные регистры и сложение дробей на битовых масках.",
+      "dueOn": null
+    },
+    "number": 1,
+    "state": "CLOSED",
+    "stateReason": "COMPLETED",
+    "title": "## 🎫 Тикет №1: Реализация главного процесса в `main.C` и системы логов",
+    "updatedAt": "2026-08-06T20:22:07Z",
+    "url": "https://github.com/kshakirov/KHAL-VM/issues/1"
+  },
+  {
+    "assignees": [
+      {
+        "id": "MDQ6VXNlcjEyNzczNDU=",
+        "login": "kshakirov",
+        "name": "likealight",
+        "databaseId": 1277345
+      }
+    ],
+    "author": {
+      "id": "MDQ6VXNlcjEyNzczNDU=",
+      "is_bot": false,
+      "login": "kshakirov",
+      "name": "likealight"
+    },
+    "body": "## 🎫 Тикет №2: Модуль `REGISTER`: Тэгирование и битовая упаковка\n**Назначение:** Создать физическую структуру умной тэгированной памяти.\n\n### 📝 Задачи:\n- [ ] Описать `enum class TypeTag : uint8_t` (NONE, INT, FIXED, RATIONAL).\n- [ ] Описать структуру `struct Register` с полями `tag` и `bits`.\n- [ ] Создать массив из 256 регистров (виртуальный регистровый файл).\n- [ ] Написать функцию упаковки дробей `uint64_t pack_rational(int32_t num, int32_t den)`.\n- [ ] Написать функции распаковки числителя и знаменателя через маску `0xFFFFFFFF` и сдвиг `>> 32`.\n\n---\n\n",
+    "closedAt": null,
+    "closedByPullRequestsReferences": [],
+    "comments": [
+      {
+        "id": "IC_kwDOThf7vM8AAAABNnlDLA",
+        "author": {
+          "login": "kshakirov"
+        },
+        "authorAssociation": "OWNER",
+        "body": "Сейчас внутри цикла счетчик int i = 1 инициализируется до прохода, но сам индекс i внутри цикла не инкрементируется (++i или i++). Из-за этого на каждой итерации данные будут писаться в один и тот же регистр registers[1].Тип *it имеет размер 4 байта (uint32_t), а ячейка bytes[0] принимает только 1 байт (char). Если число в векторе будет больше 255, при такой прямой записи произойдет усечение данн",
+        "createdAt": "2026-08-06T20:23:19Z",
+        "includesCreatedEdit": false,
+        "isMinimized": false,
+        "minimizedReason": "",
+        "reactionGroups": [],
+        "url": "https://github.com/kshakirov/KHAL-VM/issues/2#issuecomment-5208884012",
+        "viewerDidAuthor": true
+      }
+    ],
+    "createdAt": "2026-08-06T18:51:19Z",
+    "labels": [],
+    "milestone": {
+      "number": 1,
+      "title": "Веха №1: Нативный C++ Скелет и Первая Арифметика (Milestone 1)",
+      "description": "**Описание:** Оживить каркас файлов KHAL-VM, запустить сквозной проход от строки REPL до вывода результата, реализовать тэгированные регистры и сложение дробей на битовых масках.",
+      "dueOn": null
+    },
+    "number": 2,
+    "state": "OPEN",
+    "stateReason": "",
+    "title": "## 🎫 Тикет №2: Модуль `REGISTER`: Тэгирование и битовая упаковка",
+    "updatedAt": "2026-08-06T20:23:19Z",
+    "url": "https://github.com/kshakirov/KHAL-VM/issues/2"
+  },
+  {
+    "assignees": [
+      {
+        "id": "MDQ6VXNlcjEyNzczNDU=",
+        "login": "kshakirov",
+        "name": "likealight",
+        "databaseId": 1277345
+      }
+    ],
+    "author": {
+      "id": "MDQ6VXNlcjEyNzczNDU=",
+      "is_bot": false,
+      "login": "kshakirov",
+      "name": "likealight"
+    },
+    "body": "**Назначение:** Запустить базовый цикл выполнения команд процессора.\n\n### 📝 Задачи:\n- [ ] Объявить структуру байт-кода как пары `(Opcode, RegIndex)` внутри `std::vector`.\n- [ ] Реализовать цикл Fetch-Decode-Execute (Выборка-Декодирование-Выполнение) в `vm.C`.\n- [ ] Реализовать обработку опкода `0x0A` (`OP_PRINT`).\n- [ ] Связать Фронтенд и Ядро ВМ в сквозной рабочий процесс в `main.C`.",
+    "closedAt": null,
+    "closedByPullRequestsReferences": [],
+    "comments": [],
+    "createdAt": "2026-08-06T18:52:13Z",
+    "labels": [],
+    "milestone": {
+      "number": 1,
+      "title": "Веха №1: Нативный C++ Скелет и Первая Арифметика (Milestone 1)",
+      "description": "**Описание:** Оживить каркас файлов KHAL-VM, запустить сквозной проход от строки REPL до вывода результата, реализовать тэгированные регистры и сложение дробей на битовых масках.",
+      "dueOn": null
+    },
+    "number": 3,
+    "state": "OPEN",
+    "stateReason": "",
+    "title": "## 🎫 Тикет №3: Движок Интерпретатора и Выполнение команды `PRINT`",
+    "updatedAt": "2026-08-06T18:53:15Z",
+    "url": "https://github.com/kshakirov/KHAL-VM/issues/3"
+  }
+]

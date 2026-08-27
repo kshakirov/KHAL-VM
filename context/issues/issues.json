@@ -66,6 +66,36 @@
         "reactionGroups": [],
         "url": "https://github.com/kshakirov/KHAL-VM/issues/2#issuecomment-5208884012",
         "viewerDidAuthor": true
+      },
+      {
+        "id": "IC_kwDOThf7vM8AAAABRHqy3w",
+        "author": {
+          "login": "kshakirov"
+        },
+        "authorAssociation": "OWNER",
+        "body": "## Проверка фактического состояния — 27.08.2026\n\nТикет **частично начат, но перед продолжением требует пересмотра постановки**.\n\n### Что есть в коде\n\n- `TypeTag` как `enum class` отсутствует; сейчас используется `char tag`.\n- `Register` существует только как ранний локальный прототип в `vm.C`: `char tag + char bytes[8]`.\n- Массив `Register registers[256]` создан локально внутри `execute()`, не инициализируется и пока не является устойчивым состоянием VM.\n- `pack_rational()` и функции распаковки отсутствуют.\n\nПо исходному чек-листу: **1 задача выполнена, 1 выполнена частично, 3 не выполнены**.\n\n### Архитектурное расхождение\n\nАктуальный `ARCHITECTURE.md` фиксирует только семантическую форму `Tag + Payload`, а точные размеры и физическое представление откладывает. Текущая формулировка тикета заранее закрепляет `uint8_t`, 64-битный payload и упаковку `RATIONAL` через 32-битные половины. Wiki при этом описывает ещё один вариант — `union` и type-punning без масок и сдвигов.\n\nПоэтому исходный физический формат нельзя считать уже принятым архитектурным решением.\n\n### Ближайший шаг\n\nПереформулировать тикет как минимальный семантический этап:\n\n1. определить начальное множество тегов;\n2. создать честное значение `Tag + Payload`;\n3. создать регистровый файл на 256 слотов;\n4. проверить запись и чтение значений;\n5. не фиксировать компактное представление `RATIONAL`, пока оно отдельно не обосновано.\n\n**Тикет пока не закрывать.**",
+        "createdAt": "2026-08-27T18:58:04Z",
+        "includesCreatedEdit": false,
+        "isMinimized": false,
+        "minimizedReason": "",
+        "reactionGroups": [],
+        "url": "https://github.com/kshakirov/KHAL-VM/issues/2#issuecomment-5443859167",
+        "viewerDidAuthor": true
+      },
+      {
+        "id": "IC_kwDOThf7vM8AAAABRIMgFw",
+        "author": {
+          "login": "kshakirov"
+        },
+        "authorAssociation": "OWNER",
+        "body": "## Архитектурное уточнение к Issue #2 — `TypeTag + union Payload`\n\nПосле обсуждения уточняем первый эксперимент с tagged values.\n\n### Решение\n\nДля первоначальной реализации машинное значение KHAL представляем явно:\n\n```cpp\nenum class TypeTag {\n    INT,\n    BOOL,\n    NIL\n    // остальные теги добавляются по мере необходимости\n};\n\nunion Payload {\n    int64_t integer;\n    bool boolean;\n};\n\nstruct Value {\n    TypeTag tag;\n    Payload payload;\n};\n```\n\n`TypeTag` является **единственным дискриминантом значения**.\n\nНе используем `std::variant`, поскольку он содержит собственную информацию об активной альтернативе. В таком случае получились бы два независимых механизма типизации:\n\n```text\nKHAL TypeTag\n+\nstd::variant discriminator\n```\n\nДля текущего эксперимента это нежелательно: проверяем именно механизм tagged values самой KHAL.\n\n### Инвариант\n\nСмысл `Payload` определяется `TypeTag`:\n\n```text\nINT  → payload.integer\nBOOL → payload.boolean\nNIL  → значимый payload отсутствует\n```\n\nСледовательно, операция машины должна сначала проверить tag и только затем обращаться к соответствующему полю `union`.\n\nБудущая операция типа:\n\n```text\nADD_INT r1, r2 → r3\n```\n\nсемантически выполняет:\n\n```text\nr1.tag == INT\nr2.tag == INT\n        ↓\nпрочитать integer payload\n        ↓\nсложить\n        ↓\nr3 = { INT, result }\n```\n\nТаким образом, допустимость операции определяется состоянием самой KHAL, а не типовой системой C++.\n\n### Граница решения\n\n`union` **не объявляется окончательным физическим представлением KHAL**.\n\nЭто прозрачная реализация первого семантического эксперимента:\n\n```text\nValue = Tag + Payload\n```\n\nРазмер tag, размер payload, packing, alignment, NaN-boxing, pointer tagging и отображение на реальные аппаратные регистры относятся к будущему этапу lowering и сейчас не фиксируются.\n\n### Ближайшая цель Issue #2\n\n1. Ввести `TypeTag`.\n2. Ввести `Payload`.\n3. Ввести `Value = TypeTag + Payload`.\n4. Создать register file из 256 значений.\n5. Проверить запись и чтение как минимум `INT`, `BOOL` и `NIL`.\n6. Не вводить арифметику и формат bytecode до проверки этого базового машинного состояния.",
+        "createdAt": "2026-08-27T19:47:40Z",
+        "includesCreatedEdit": false,
+        "isMinimized": false,
+        "minimizedReason": "",
+        "reactionGroups": [],
+        "url": "https://github.com/kshakirov/KHAL-VM/issues/2#issuecomment-5444411415",
+        "viewerDidAuthor": true
       }
     ],
     "createdAt": "2026-08-06T18:51:19Z",
@@ -80,7 +110,7 @@
     "state": "OPEN",
     "stateReason": "",
     "title": "## 🎫 Тикет №2: Модуль `REGISTER`: Тэгирование и битовая упаковка",
-    "updatedAt": "2026-08-06T20:23:19Z",
+    "updatedAt": "2026-08-27T19:47:40Z",
     "url": "https://github.com/kshakirov/KHAL-VM/issues/2"
   },
   {
@@ -101,7 +131,23 @@
     "body": "**Назначение:** Запустить базовый цикл выполнения команд процессора.\n\n### 📝 Задачи:\n- [ ] Объявить структуру байт-кода как пары `(Opcode, RegIndex)` внутри `std::vector`.\n- [ ] Реализовать цикл Fetch-Decode-Execute (Выборка-Декодирование-Выполнение) в `vm.C`.\n- [ ] Реализовать обработку опкода `0x0A` (`OP_PRINT`).\n- [ ] Связать Фронтенд и Ядро ВМ в сквозной рабочий процесс в `main.C`.",
     "closedAt": null,
     "closedByPullRequestsReferences": [],
-    "comments": [],
+    "comments": [
+      {
+        "id": "IC_kwDOThf7vM8AAAABRHq84A",
+        "author": {
+          "login": "kshakirov"
+        },
+        "authorAssociation": "OWNER",
+        "body": "## Проверка фактического состояния — 27.08.2026\n\nТикет находится на стадии **работающего скелета; основная исполнительная семантика ещё отсутствует**.\n\n### Что подтверждено\n\n- C++-скелет компилируется и запускается.\n- Маршрут `main → compile → execute` связан.\n- `compile()` пока игнорирует выражение и всегда возвращает `{1, 2, 2}`.\n- Формат пар `(Opcode, RegIndex)` не определён.\n- Fetch–Decode–Execute, Instruction Pointer и диспетчеризация opcode отсутствуют.\n- `OP_PRINT (0x0A)` отсутствует.\n- `execute()` сейчас пропускает первый элемент вектора и копирует остальные значения в локальные регистры.\n\nПо исходному чек-листу: **1 задача выполнена, 1 выполнена частично, 2 не выполнены**.\n\n### Технические замечания\n\n- `execute()` принимает вектор по значению.\n- Регистры не инициализируются.\n- `uint32_t` записывается только в `char bytes[0]`, поэтому значения больше одного байта будут усечены.\n- Нет реакции на неизвестный opcode.\n\n### Ближайший проверяемый результат\n\nСогласовать минимальный формат инструкции и провести один полный маршрут:\n\n`OP_LOAD_* → регистр → OP_PRINT → наблюдаемый вывод`\n\nРекомендуемый порядок:\n\n1. определить минимальный поток инструкций;\n2. сделать регистровый файл состоянием VM;\n3. реализовать одну инструкцию загрузки;\n4. реализовать цикл Fetch–Decode–Execute;\n5. реализовать `OP_PRINT`;\n6. проверить сквозной путь `source → compile → bytecode → execute → output`.\n\n**Тикет пока не закрывать.**",
+        "createdAt": "2026-08-27T18:58:19Z",
+        "includesCreatedEdit": false,
+        "isMinimized": false,
+        "minimizedReason": "",
+        "reactionGroups": [],
+        "url": "https://github.com/kshakirov/KHAL-VM/issues/3#issuecomment-5443861728",
+        "viewerDidAuthor": true
+      }
+    ],
     "createdAt": "2026-08-06T18:52:13Z",
     "labels": [],
     "milestone": {
@@ -114,7 +160,7 @@
     "state": "OPEN",
     "stateReason": "",
     "title": "## 🎫 Тикет №3: Движок Интерпретатора и Выполнение команды `PRINT`",
-    "updatedAt": "2026-08-06T18:53:15Z",
+    "updatedAt": "2026-08-27T18:58:19Z",
     "url": "https://github.com/kshakirov/KHAL-VM/issues/3"
   }
 ]

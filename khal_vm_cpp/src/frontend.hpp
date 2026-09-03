@@ -1,5 +1,9 @@
-
+#include <vector>
 #include <string>
 #include <vector>
+#include <iostream>
+#include "include/khal_types.hpp"
+
 using namespace std;
-vector<uint32_t> compile (string);
+
+vector<Instruction> compile (string);

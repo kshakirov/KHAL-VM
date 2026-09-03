@@ -1,8 +1,9 @@
-using namespace  std;
+
 #include <iostream>
 #include "frontend.hpp"
 #include "vm.hpp"
 #include <vector>
+using namespace  std;
 int main(int argc, char** argv){
   
   if (argc < 2) {

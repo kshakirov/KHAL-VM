@@ -1,10 +1,10 @@
 #pragma once
 #include <vector>
-typedef enum { INT, BOOL, NIL } Tag;
+ enum class  Tag { INT, BOOL, NIL };
 
 enum class OpCode { LOAD_INT, ADD_INT, PRINT_INT };
 
-typedef struct{
+struct Instruction{
   OpCode op;
   std::vector<int32_t> operands;
-} Instruction;
+} ;

@@ -26,7 +26,9 @@ typedef struct {
 typedef int FuncTable[8];
 FuncTable ft;
 VmState vm_state;
-int currentRegister=1; //by convention starting from r1
+int currentRegister = 1; // by convention starting from r1
+int rf = 255;            // global function register number
+int rfb = 254; //back jump adress from function call
 void execute(vector<Instruction> bytecode) {
   Register registers[256];
   cout << "VM: executing bytecode [" << bytecode.size() << "] operands  " << " state is " << static_cast<int>(vm_state)
@@ -85,17 +87,19 @@ void execute(vector<Instruction> bytecode) {
         // just go further
 	cout << "FUNCTION START : EXEC  " << endl;
       } else {
+	vm_state = VmState::IN_FUNCTION;
+	registers[rf].tag = Tag::FUNCTION;
         std::size_t i = std::distance(start, it);
-        ft[0] = i; // хардкожу пока
+        registers[rf].payload.integer = i; // 
 	cout << "FUNCTION START : IN FUNC the jmp is   "<< i << endl;
       }
       break;
     }
     case OpCode::FUNCTION_END: {
       if (vm_state == VmState::EXECUTING_FUNCTION) {
-        it = start + ft[0]; // хардкожу тоже не кричать
+        it = start + registers[rfb].payload.integer; 
 	vm_state = VmState::FLAT;
-	cout << "FUNCTION END : EXEC  the jmp is   "<< ft[0]<< endl;
+	cout << "FUNCTION END : EXEC  the jmp is   "<< registers[rf].payload.integer<< endl;
       } else {
 	cout << "FUNCTION END: IN FUNC  " << endl;
         vm_state = VmState::FLAT;
@@ -109,9 +113,9 @@ void execute(vector<Instruction> bytecode) {
       } else {
         vm_state = VmState::EXECUTING_FUNCTION;
 	std::size_t i = std::distance(start, it);
-        it = start + ft[0]; // хардкожу тоже не кричать
+        it = start + registers[rf].payload.integer; 
 	cout << "Back jump is " << i <<endl;
-        ft[0] = i; // хардкожу пока
+	registers[rfb].payload.integer = i;
       }
       break;
     }

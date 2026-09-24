@@ -1,6 +1,8 @@
 #include "include/khal_types.hpp"
 #include "vm.hpp"
 #include <cassert>
+#include <iostream>
+#include <ostream>
 using namespace std;
 
 typedef struct {
@@ -24,48 +26,57 @@ typedef struct {
 typedef int FuncTable[8];
 FuncTable ft;
 VmState vm_state;
+int currentRegister=1; //by convention starting from r1
 void execute(vector<Instruction> bytecode) {
   Register registers[256];
-  cout << "VM: executing bytecode [" << bytecode.size() << "] operants "
+  cout << "VM: executing bytecode [" << bytecode.size() << "] operands  " << " state is " << static_cast<int>(vm_state)
        << endl;
   auto start = std::begin(bytecode);
   auto finish = std::end(bytecode);
 
   for (auto it = start; it != finish; ++it) {
+
     switch (it->op) {
+
     case OpCode::LOAD_INT: {
       if (vm_state != VmState::IN_FUNCTION) {
-        auto reg_num = it->operands.at(0);
+
+        auto reg_num = currentRegister;
         auto value = it->operands.at(1);
         assert(reg_num >= 0 && reg_num < 256);
         registers[reg_num].tag = Tag::INT;
         registers[reg_num].payload.integer = value;
+	cout << " Load Int to Register: " << reg_num  << endl;
+	currentRegister += 1;
       }
       break;
     }
     case OpCode::ADD_INT: {
       if (vm_state != VmState::IN_FUNCTION) {
-        auto ra = it->operands.at(0);
+	auto r0 = 0; //convention
+	registers[r0].tag = Tag::INT;
+        auto ra = 1; //r1 
         assert(ra >= 0 && ra < 256);
         assert(registers[ra].tag == Tag::INT); // for the time being
-        auto rb = it->operands.at(1);
+        auto rb = 2;//r2 convention
         assert(rb >= 0 && rb < 256);
         assert(registers[rb].tag == Tag::INT); // for the time being
         auto added =
             registers[ra].payload.integer + registers[rb].payload.integer;
         cout << "ADD:  " << registers[ra].payload.integer << " "
              << registers[rb].payload.integer << " added is  " << added << endl;
-        registers[ra].payload.integer = added;
-        cout << "Saved to Register " << endl;
+        registers[r0].payload.integer = added;
+	currentRegister = 1; //reset it 
+        cout << "Saved to Register  " << r0  <<endl;
       }
       break;
     }
     case OpCode::PRINT_INT: {
       if (vm_state != VmState::IN_FUNCTION) {
-        auto ra = it->operands.at(0);
-        assert(ra >= 0 && ra < 256);
-        assert(registers[ra].tag == Tag::INT);
-        cout << "PRINT_INT:  " << registers[ra].payload.integer << endl;
+        auto r0 =0; // for the time being r0 this 
+        assert(r0 >= 0 && r0 < 256);
+        assert(registers[r0].tag == Tag::INT);
+        cout << "PRINT_INT:  " << registers[r0].payload.integer << endl;
       }
       break;
     }

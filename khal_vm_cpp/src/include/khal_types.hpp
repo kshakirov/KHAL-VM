@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>
 enum class  Tag { INT, BOOL, NIL, FUNCTION, OBJECT };
-enum class VmState {IN_FUNCTION, FLAT, EXECUTING_FUNCTION};
+enum class VmState {FLAT , IN_FUNCTION, EXECUTING_FUNCTION};
 enum class OpCode {
   LOAD_INT,
   ADD_INT,

@@ -7,7 +7,7 @@ using namespace std;
 
 
 vector<Instruction> _compile_a(string expression) {
-  Instruction instruction_a, instruction_b, instruction_c, instruction_d, instruction_f;
+  Instruction instruction_a, instruction_b, instruction_c, instruction_d;
   instruction_a.op = OpCode::LOAD_INT;
   instruction_a.operands = {1,222}; //1 register
   instruction_b.op = OpCode::LOAD_INT;
@@ -54,5 +54,5 @@ vector<Instruction> _compile_b(string expression) {
 };
 
 vector<Instruction> compile(string expression){
-  return _compile_b(expression);
+  return _compile_a(expression);
 }

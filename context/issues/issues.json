@@ -237,5 +237,43 @@
     "title": "## 🎫 Тикет №3: Движок Интерпретатора и Выполнение команды `PRINT`",
     "updatedAt": "2026-09-17T20:42:42Z",
     "url": "https://github.com/kshakirov/KHAL-VM/issues/3"
+  },
+  {
+    "assignees": [],
+    "author": {
+      "id": "MDQ6VXNlcjEyNzczNDU=",
+      "is_bot": false,
+      "login": "kshakirov",
+      "name": "likealight"
+    },
+    "body": "## Назначение\n\nСделать минимальный текстовый ассемблер KHAL для исследовательских программ VM.\n\nЭто не parser JavaScript и не полноценный frontend. Его задача — убрать ручное создание десятков C++-переменных `Instruction` и дать читаемый стенд вида:\n\n```text\nFUNCTION_START\nLOAD_INT 100\nLOAD_INT 200\nADD_INT\nRETURN\nFUNCTION_END\nCALL\nPRINT_INT\n```\n\n## Первый контракт\n\n```text\nодна строка → один opcode + список числовых операндов\nпрограмма   → vector<Instruction>\n```\n\n## Ближайшие задачи\n\n- [ ] распознавать все текущие opcode;\n- [ ] поддержать команды как с параметрами, так и без них;\n- [ ] преобразовывать числовые параметры;\n- [ ] собирать инструкции в `vector<Instruction>`;\n- [ ] подключить результат к существующему frontend/VM;\n- [ ] явно реагировать на `UNKNOWN`;\n- [ ] сохранить простой отдельный запуск parser для отладки.\n\n## Граница\n\nПока не вводить AST, выражения JavaScript, идентификаторы, объекты и сложную грамматику. Этот инструмент нужен только для ясной проверки семантики KHAL.\n",
+    "closedAt": null,
+    "closedByPullRequestsReferences": [],
+    "comments": [
+      {
+        "id": "IC_kwDOThf7vM8AAAABYhIBKQ",
+        "author": {
+          "login": "kshakirov"
+        },
+        "authorAssociation": "OWNER",
+        "body": "Сегодня я поднял первый самостоятельный проход мини-ассемблера.\n\nЧто уже работает:\n\n- появилась отдельная цель `make parser` с явными зависимостями от `parser.C` и общего заголовка;\n- программа разбивается на строки без захвата предыдущего перевода строки;\n- `LOAD_INT 222` и `LOAD_INT 333` распознаются;\n- числовая часть преобразуется через `stoi` и записывается в operands;\n- результат `parse()` уже добавляется в `vector<Instruction>`;\n- парсер можно собирать и запускать отдельно от основной VM.\n\nТекущая граница опыта видна хорошо: распознавание opcode пока начинается только при встрече пробела. Поэтому команды без параметров — `ADD_INT`, `PRINT_INT`, `FUNCTION_START`, `FUNCTION_END`, `CALL`, `RETURN` — остаются `UNKNOWN`.\n\nМой ближайший шаг: сначала выделять имя opcode целиком через позицию первого пробела, причём при отсутствии пробела считать opcode всей строкой. После этого отдельно разбирать параметры. Пока не подключаю настоящий язык, AST или JavaScript-синтаксис: нам нужен маленький надёжный KHAL-assembler как стенд для `CALL/RETURN`.\n",
+        "createdAt": "2026-10-01T20:52:25Z",
+        "includesCreatedEdit": false,
+        "isMinimized": false,
+        "minimizedReason": "",
+        "reactionGroups": [],
+        "url": "https://github.com/kshakirov/KHAL-VM/issues/4#issuecomment-5940314409",
+        "viewerDidAuthor": true
+      }
+    ],
+    "createdAt": "2026-10-01T20:51:37Z",
+    "labels": [],
+    "milestone": null,
+    "number": 4,
+    "state": "OPEN",
+    "stateReason": "",
+    "title": "Мини-ассемблер KHAL: текстовый поток инструкций",
+    "updatedAt": "2026-10-01T20:52:25Z",
+    "url": "https://github.com/kshakirov/KHAL-VM/issues/4"
   }
 ]

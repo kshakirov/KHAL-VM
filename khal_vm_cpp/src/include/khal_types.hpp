@@ -9,7 +9,8 @@ enum class OpCode {
   FUNCTION_START,
   FUNCTION_END,
   CALL,
-  RETURN
+  RETURN,
+  UNKNOWN
       };
 
 struct Instruction{

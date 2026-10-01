@@ -95,11 +95,21 @@ void execute(vector<Instruction> bytecode) {
       }
       break;
     }
-    case OpCode::FUNCTION_END: {
+
+    case OpCode::RETURN: {
       if (vm_state == VmState::EXECUTING_FUNCTION) {
         it = start + registers[rfb].payload.integer; 
 	vm_state = VmState::FLAT;
-	cout << "FUNCTION END : EXEC  the jmp is   "<< registers[rf].payload.integer<< endl;
+	cout << "RETURN : EXEC  the jmp is   "<< registers[rf].payload.integer<< endl;
+      } else {
+	cout << "RETURN : IN FUNC  " << endl;
+
+      }
+      break;
+    }
+    case OpCode::FUNCTION_END: {
+      if (vm_state == VmState::EXECUTING_FUNCTION) {
+	cout << "FUNCTION END : doing " << endl;
       } else {
 	cout << "FUNCTION END: IN FUNC  " << endl;
         vm_state = VmState::FLAT;

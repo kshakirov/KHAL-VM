@@ -28,7 +28,7 @@ vector<Instruction> _compile_a(string expression) {
 };
 
 vector<Instruction> _compile_b(string expression) {
-  Instruction instruction_a, instruction_b, instruction_c, instruction_d, instruction_f, instruction_e, instruction_h;
+  Instruction instruction_a, instruction_b, instruction_c, instruction_d, instruction_f, instruction_e, instruction_h, instruction_i, instruction_aa, instruction_bb, instruction_cc, instruction_dd;
   
   instruction_a.op = OpCode::FUNCTION_START;
   instruction_b.op = OpCode::LOAD_INT;
@@ -38,16 +38,33 @@ vector<Instruction> _compile_b(string expression) {
   instruction_e.op = OpCode::ADD_INT;
   instruction_e.operands = {1,2}; //needles to evm
   instruction_d.op = OpCode::PRINT_INT;
+  instruction_i.op = OpCode::RETURN;
   instruction_c.op =OpCode::FUNCTION_END;
   instruction_h.op = OpCode::CALL;
+  instruction_aa.op = OpCode::LOAD_INT;
+  instruction_aa.operands = {1,222}; //1 register
+  instruction_bb.op = OpCode::LOAD_INT;
+  instruction_bb.operands ={2,333};
+  instruction_cc.op = OpCode::ADD_INT;
+  instruction_cc.operands = {1,2}; //registers
+  instruction_dd.op = OpCode::PRINT_INT;
+  instruction_dd.operands = {1};
+  
   vector<Instruction> instructions;
   instructions.push_back(instruction_a);
   instructions.push_back(instruction_b);
   instructions.push_back(instruction_f);
   instructions.push_back(instruction_e);
   instructions.push_back(instruction_d);
+  instructions.push_back(instruction_i);
   instructions.push_back(instruction_c);
   instructions.push_back(instruction_h);
+
+  //vector<Instruction> instructions;
+  instructions.push_back(instruction_aa);
+  instructions.push_back(instruction_bb);
+  instructions.push_back(instruction_cc);
+  instructions.push_back(instruction_dd);
 
 
   

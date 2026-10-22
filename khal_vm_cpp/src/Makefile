@@ -6,6 +6,10 @@ FLAGS=-std=c++23
 all:
 	$(GCC) main.C   frontend.C vm.C  -o main    $(FLAGS)
 
-parser: parser.C include/khal_types.hpp
+
+parser_naive: parser.C include/khal_types.hpp
 	$(GCC) parser.C -o parser $(FLAGS)
+
+parser: parser_full.C include/khal_types.hpp
+	$(GCC) parser_full.C -o parser $(FLAGS)
 

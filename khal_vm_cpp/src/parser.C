@@ -11,7 +11,7 @@ using std::endl;
 using std::string_view;
 
 
-Instruction parse(string_view  line){
+Instruction parse_naive(string_view  line){
   Instruction instruction;
   instruction.op = OpCode::UNKNOWN;
   //  cout << "parse: " << line << endl;
@@ -74,7 +74,7 @@ Instruction parse(string_view  line){
   for (size_t i = 0; i < code.size(); ++i) {
     if(code.at(i) == '\n'){
       cout << "start at " << prev_n_line << " end at " << i<< endl;
-      auto instruction = parse(string_view(code).substr(prev_n_line, (i - prev_n_line)));
+      auto instruction = parse_naive(string_view(code).substr(prev_n_line, (i - prev_n_line)));
       v.push_back(instruction);
       prev_n_line = i + 1;
     }

@@ -275,5 +275,43 @@
     "title": "Мини-ассемблер KHAL: текстовый поток инструкций",
     "updatedAt": "2026-10-01T20:52:25Z",
     "url": "https://github.com/kshakirov/KHAL-VM/issues/4"
+  },
+  {
+    "assignees": [],
+    "author": {
+      "id": "MDQ6VXNlcjEyNzczNDU=",
+      "is_bot": false,
+      "login": "kshakirov",
+      "name": "likealight"
+    },
+    "body": "Структурно перенести нормализованное IR-дерево в арену узлов ATOM/APP без вычислений и разрешения имён. Проверить корень и связи построенного графа.",
+    "closedAt": null,
+    "closedByPullRequestsReferences": [],
+    "comments": [
+      {
+        "id": "IC_kwDOThf7vM8AAAABg_FsSw",
+        "author": {
+          "login": "kshakirov"
+        },
+        "authorAssociation": "OWNER",
+        "body": "Первый этюд готов: IR-дерево материализуется в 47 узлов ATOM/APP. Сборка и автоматическая проверка проходят; вычислений и разрешения имён пока нет.",
+        "createdAt": "2026-10-29T21:20:39Z",
+        "includesCreatedEdit": false,
+        "isMinimized": false,
+        "minimizedReason": "",
+        "reactionGroups": [],
+        "url": "https://github.com/kshakirov/KHAL-VM/issues/5#issuecomment-6508604491",
+        "viewerDidAuthor": true
+      }
+    ],
+    "createdAt": "2026-10-29T21:20:33Z",
+    "labels": [],
+    "milestone": null,
+    "number": 5,
+    "state": "OPEN",
+    "stateReason": "",
+    "title": "Graph KHAL: этюд 1 — дерево в граф",
+    "updatedAt": "2026-10-29T21:20:39Z",
+    "url": "https://github.com/kshakirov/KHAL-VM/issues/5"
   }
 ]

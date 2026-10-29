@@ -30,3 +30,13 @@ void move_right(Cursor &cursor, const Arena &arena) {
   const Node &node = get_node(arena, cursor.current);
   cursor.current = node.right;
 }
+
+NodeId compile_tree(Arena &arena, const Tree &tree) {
+  NodeId root = make_atom(arena, tree.value);
+
+  for (const Tree &child : tree.children) {
+    root = make_app(arena, root, compile_tree(arena, child));
+  }
+
+  return root;
+}

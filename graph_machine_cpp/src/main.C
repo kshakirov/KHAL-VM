@@ -4,29 +4,43 @@
 #include <iostream>
 
 int main() {
+  const Tree program{
+      "PROGRAM",
+      {{"SCOPE",
+        {{"A", {}},
+         {"BIND", {{"x", {}}, {"10", {}}}},
+         {"BIND",
+          {{"plus", {}},
+           {"LAMBDA",
+            {{"y", {}},
+             {"APP",
+              {{"APP",
+                {{"ADD", {}}, {"RESOLVE", {{"A", {}}, {"x", {}}}}}},
+               {"y", {}}}}}}}}}},
+       {"BIND",
+        {{"result", {}},
+         {"APP",
+          {{"RESOLVE", {{"A", {}}, {"plus", {}}}}, {"5", {}}}}}}}};
+
   Arena arena;
+  const NodeId root = compile_tree(arena, program);
 
-  const NodeId add = make_atom(arena, "ADD");
-  const NodeId one = make_atom(arena, "1");
-  const NodeId two = make_atom(arena, "2");
-  const NodeId add_one = make_app(arena, add, one);
-  const NodeId root = make_app(arena, add_one, two, true);
-
-  assert(get_node(arena, root).left == add_one);
-  assert(get_node(arena, root).right == two);
-  assert(get_node(arena, add_one).left == add);
-  assert(get_node(arena, add_one).right == one);
-  assert(get_node(arena, root).active);
+  assert(arena.nodes.size() == 47);
+  assert(get_node(arena, root).tag == NodeTag::APP);
 
   Cursor cursor{root};
   move_left(cursor, arena);
-  assert(cursor.current == add_one);
   move_left(cursor, arena);
-  assert(cursor.current == add);
+
+  const Node &program_atom = get_node(arena, cursor.current);
+  assert(program_atom.tag == NodeTag::ATOM);
+  assert(program_atom.value == "PROGRAM");
 
   set_cursor(cursor, root);
   move_right(cursor, arena);
-  assert(cursor.current == two);
+  const Node &result_binding = get_node(arena, cursor.current);
+  assert(result_binding.tag == NodeTag::APP);
 
-  std::cout << "Graph KHAL: skeleton test passed\n";
+  std::cout << "Graph KHAL: tree compiled to " << arena.nodes.size()
+            << " graph nodes\n";
 }

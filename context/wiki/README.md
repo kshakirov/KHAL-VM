@@ -2,13 +2,14 @@
 
 Локальный снимок Wiki [kshakirov/KHAL-VM](https://github.com/kshakirov/KHAL-VM/wiki).
 
-- Коммит Wiki: `792099fd3d19562082cd9fa827bb63740ef2f5de`
-- Обновлено в Wiki: `2026-09-24T23:32:02+03:00`
-- Страниц и служебных файлов: `4`
+- Коммит Wiki: `197f7eeb40e6e588a22c6203ad1fab267fcc7d28`
+- Обновлено в Wiki: `2026-10-29T21:52:29+02:00`
+- Страниц и служебных файлов: `5`
 
 ## Файлы
 
 - [Functions-Objects-and-the-Semantic-Machine.md](pages/Functions-Objects-and-the-Semantic-Machine.md)
+- [Graph-KHAL-Vision.md](pages/Graph-KHAL-Vision.md)
 - [Home.md](pages/Home.md)
 - [naive_VM.md](pages/naive_VM.md)
 - [second-approach.md](pages/second-approach.md)

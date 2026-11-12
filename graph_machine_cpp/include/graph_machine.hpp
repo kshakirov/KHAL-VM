@@ -13,11 +13,12 @@ enum class NodeTag { ATOM, APP };
 
 struct Node {
   const NodeId id;
-  NodeTag tag;
+  NodeTag tag; 
   NodeId left;
   NodeId right;
+  NodeId back;
   std::string value;
-  bool active;
+  bool is_right;
 };
 
 struct Arena {
@@ -33,9 +34,9 @@ struct Tree {
   std::vector<Tree> children;
 };
 
-NodeId make_atom(Arena &arena, std::string value, bool active = false);
+NodeId make_atom(Arena &arena, std::string value, bool is_right = false);
 NodeId make_app(Arena &arena, NodeId left, NodeId right,
-                bool active = false);
+                bool is_right = false);
 const Node &get_node(const Arena &arena, NodeId id);
 
 void set_cursor(Cursor &cursor, NodeId id);

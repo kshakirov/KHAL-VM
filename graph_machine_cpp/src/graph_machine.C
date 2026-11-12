@@ -2,21 +2,25 @@
 
 #include <utility>
 
-NodeId make_atom(Arena &arena, std::string value, bool active) {
+NodeId make_atom(Arena &arena, std::string value, bool is_right) {
   const NodeId id = arena.nodes.size();
   arena.nodes.push_back(
-      Node{id, NodeTag::ATOM, no_node, no_node, std::move(value), active});
+      Node{id, NodeTag::ATOM, no_node, no_node, no_node, std::move(value), is_right});
   return id;
 }
 
-NodeId make_app(Arena &arena, NodeId left, NodeId right, bool active) {
+NodeId make_app(Arena &arena, NodeId left, NodeId right, bool is_right) {
   const NodeId id = arena.nodes.size();
-  arena.nodes.push_back(Node{id, NodeTag::APP, left, right, {}, active});
+  arena.nodes.push_back(Node{id, NodeTag::APP, left, right, no_node, {}, is_right});
   return id;
 }
 
 const Node &get_node(const Arena &arena, NodeId id) {
   return arena.nodes.at(id);
+}
+
+Node& get_node(Arena& arena, NodeId id) {
+    return arena.nodes.at(id);
 }
 
 void set_cursor(Cursor &cursor, NodeId id) { cursor.current = id; }

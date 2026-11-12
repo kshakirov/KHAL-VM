@@ -302,6 +302,21 @@
         "reactionGroups": [],
         "url": "https://github.com/kshakirov/KHAL-VM/issues/5#issuecomment-6508604491",
         "viewerDidAuthor": true
+      },
+      {
+        "id": "IC_kwDOThf7vM8AAAABl4TZfg",
+        "author": {
+          "login": "kshakirov"
+        },
+        "authorAssociation": "OWNER",
+        "body": "Собрал черновой проход для графа APP(I, x): добавил back/is_right, состояния спуска и подъёма и отдельную тестовую сборку. Тест компилируется. Главное дальше: идти по левой цепочке, записывать backlinks, у комбинатора собрать нужное число APP (I=1, K=2, S=3), считать последний APP корнем редекса и заменить входящее ребро его родителя либо общий root. В текущем I-черновике аргумент надо брать из parent APP.right, а не из I.right.",
+        "createdAt": "2026-11-12T21:57:07Z",
+        "includesCreatedEdit": false,
+        "isMinimized": false,
+        "minimizedReason": "",
+        "reactionGroups": [],
+        "url": "https://github.com/kshakirov/KHAL-VM/issues/5#issuecomment-6837033342",
+        "viewerDidAuthor": true
       }
     ],
     "createdAt": "2026-10-29T21:20:33Z",
@@ -311,7 +326,7 @@
     "state": "OPEN",
     "stateReason": "",
     "title": "Graph KHAL: этюд 1 — дерево в граф",
-    "updatedAt": "2026-10-29T21:20:39Z",
+    "updatedAt": "2026-11-12T21:57:07Z",
     "url": "https://github.com/kshakirov/KHAL-VM/issues/5"
   }
 ]

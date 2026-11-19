@@ -1,22 +1,18 @@
 #include "../include/graph_machine.hpp"
 #include <cassert>
 #include <iostream>
+#include <ostream>
 #include <variant>
 using std::cout;
 using std::endl;
 
-enum State{
-  DESCENDING,
-  ASCENDING
-};
+enum State { DESCENDING, ASCENDING };
 
-
-
-int main(void){
+int main(void) {
   cout << "Working wit SKI combinators" << endl;
   Arena arena;
-  auto node_i = make_atom(arena, "I", false);
-  auto node_x = make_atom(arena, "x", true);
+  auto node_i = make_combinator(arena, NodeTag::I, false);
+  auto node_x = make_atom(arena, NodeTag::INT, 42, true);
   auto node_app = make_app(arena, node_i, node_x);
   assert(arena.nodes.size() == 3);
   int i = 0;
@@ -25,46 +21,57 @@ int main(void){
   auto wip = true;
   NodeId parent;
   auto root = node_app;
+  
   auto reduct = no_node;
   set_cursor(cursor, root);
   while (i < 5 && wip) {
+    auto node = get_node(arena, cursor.current);
     switch (state) {
     case DESCENDING: {
-      auto node = get_node(arena, cursor.current);
-      if(node.tag == NodeTag::APP){
-	set_cursor(cursor,node.left);
-	parent = node.id;
-	cout << "Tag is  APP"  <<endl;
-      }else{
-	if(node.value == "I"){
-	  node.back = parent;
-	  set_cursor(cursor, node.right);
-	  parent = node.id;
-	  cout << "I combinator  "  << node.value <<endl;
-	}else if (node.is_right) {
-	  if(node.tag == NodeTag::ATOM){
-	    node.back  = parent;
-	    reduct = node.id;
-	    state = ASCENDING;
-	    cout << "Right atom  "  << node.value <<endl;
-	  }
-	  
-	    }
+      switch (node.tag) {
+      case NodeTag::APP: {
+        set_cursor(cursor, node.left);
+        parent = node.id;
+	cout << "APP" <<endl;
+        break;
       }
-      i += 1;
+      case NodeTag::I: {
+        node.back = parent;
+        set_cursor(cursor, node.back);
+        state = ASCENDING;
+	cout << "I getting back to APP" <<endl;
+        break;
+      }
+      case NodeTag::ATOM: {
+        break;
+      }
+      }
       break;
     }
     case ASCENDING: {
-      auto node = get_node(arena, cursor.current);
+      switch (node.tag) {
+      case NodeTag::APP: {
+	reduct = node.right;
 
-      set_cursor(cursor,node.back);
-            i += 1;
-	    break;
+	cout << "APP again" <<endl;        
+	if(node.id == root){
+	  root=reduct;
+	  wip = false;
+	  set_cursor(cursor, root);
+	}else {
+	  set_cursor(cursor, node.back);
+	}
+	  
+        break;
+      }
+      }
+      break;
     }
-    default: {
-      i += 1;
     }
-
-    }
+    i += 1;
   }
+
+  cout<< cursor.current << endl;
+  auto node = get_node(arena, cursor.current);
+  assert(root==node_x);
 }

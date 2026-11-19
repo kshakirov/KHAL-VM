@@ -1,15 +1,15 @@
 #pragma once
 
 #include <cstddef>
+#include <cstdint>
 #include <limits>
-#include <string>
 #include <vector>
 
-using NodeId = std::size_t;
+using NodeId = int32_t;
 
 inline constexpr NodeId no_node = std::numeric_limits<NodeId>::max();
 
-enum class NodeTag { ATOM, APP };
+enum class NodeTag { ATOM, APP, I,K,S, REF, INT };
 
 struct Node {
   const NodeId id;
@@ -17,7 +17,7 @@ struct Node {
   NodeId left;
   NodeId right;
   NodeId back;
-  std::string value;
+  NodeId data;
   bool is_right;
 };
 
@@ -29,18 +29,14 @@ struct Cursor {
   NodeId current;
 };
 
-struct Tree {
-  std::string value;
-  std::vector<Tree> children;
-};
-
-NodeId make_atom(Arena &arena, std::string value, bool is_right = false);
+NodeId make_atom(Arena &arena, NodeTag tag, NodeId data = no_node,
+                 bool is_right = false);
+NodeId make_combinator(Arena &arena, NodeTag tag, bool is_right = false);
 NodeId make_app(Arena &arena, NodeId left, NodeId right,
                 bool is_right = false);
 const Node &get_node(const Arena &arena, NodeId id);
+Node &get_node(Arena &arena, NodeId id);
 
 void set_cursor(Cursor &cursor, NodeId id);
 void move_left(Cursor &cursor, const Arena &arena);
 void move_right(Cursor &cursor, const Arena &arena);
-
-NodeId compile_tree(Arena &arena, const Tree &tree);

@@ -317,6 +317,21 @@
         "reactionGroups": [],
         "url": "https://github.com/kshakirov/KHAL-VM/issues/5#issuecomment-6837033342",
         "viewerDidAuthor": true
+      },
+      {
+        "id": "IC_kwDOThf7vM8AAAABooM1TQ",
+        "author": {
+          "login": "kshakirov"
+        },
+        "authorAssociation": "OWNER",
+        "body": "Первый пространственный редукционный проход работает: автомат проходит APP → I → APP и сворачивает I x → x, переводя root и курсор на x. Дальше нужно обобщить левый проход, backlinks и замену входящего ребра для вложенных редексов, затем реализовать K и S. После полного SKI-прохода переходим к небольшим JavaScript-этюдам.",
+        "createdAt": "2026-11-19T20:34:35Z",
+        "includesCreatedEdit": false,
+        "isMinimized": false,
+        "minimizedReason": "",
+        "reactionGroups": [],
+        "url": "https://github.com/kshakirov/KHAL-VM/issues/5#issuecomment-7021475149",
+        "viewerDidAuthor": true
       }
     ],
     "createdAt": "2026-10-29T21:20:33Z",
@@ -326,7 +341,7 @@
     "state": "OPEN",
     "stateReason": "",
     "title": "Graph KHAL: этюд 1 — дерево в граф",
-    "updatedAt": "2026-11-12T21:57:07Z",
+    "updatedAt": "2026-11-19T20:34:35Z",
     "url": "https://github.com/kshakirov/KHAL-VM/issues/5"
   }
 ]

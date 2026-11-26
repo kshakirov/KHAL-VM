@@ -5,7 +5,6 @@
 #include <limits>
 #include <vector>
 #include <iostream>
-#include "../include/graph_machine.hpp"
 
 using NodeId = int32_t;
 

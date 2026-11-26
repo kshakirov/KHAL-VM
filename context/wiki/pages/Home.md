@@ -1,5 +1,8 @@
-Welcome to the KHAL-VM wiki!
+# Graph KHAL
 
-[[Наивное представление первое ХалВм | naive_VM]]
+- [[Graph Machine]]
+- [[Graph Traversal]]
+- [[Reduction Rules]]
 
-[[Second Approach | second approach]]
+Здесь — проверенные результаты. Открытые вопросы ведём в
+[Issues](https://github.com/kshakirov/KHAL-VM/issues).

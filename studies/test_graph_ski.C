@@ -1,4 +1,4 @@
-#include "../include/graph_machine.hpp"
+#include "graph_machine.hpp"
 #include <cassert>
 #include <iostream>
 #include <ostream>
@@ -24,4 +24,5 @@ int main(void) {
   auto& node = get_node(arena, cursor.current);
   assert(node_app_1 == cursor.current);
   assert(node.left == node_x);
+  assert(node.right == node_y);
 }

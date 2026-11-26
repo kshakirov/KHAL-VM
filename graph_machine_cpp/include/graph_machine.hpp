@@ -4,8 +4,12 @@
 #include <cstdint>
 #include <limits>
 #include <vector>
+#include <iostream>
+#include "../include/graph_machine.hpp"
 
 using NodeId = int32_t;
+
+enum State { DESCENDING, ASCENDING };
 
 inline constexpr NodeId no_node = std::numeric_limits<NodeId>::max();
 
@@ -40,3 +44,4 @@ Node &get_node(Arena &arena, NodeId id);
 void set_cursor(Cursor &cursor, NodeId id);
 void move_left(Cursor &cursor, const Arena &arena);
 void move_right(Cursor &cursor, const Arena &arena);
+void reduce(NodeId first,  Arena& arena);

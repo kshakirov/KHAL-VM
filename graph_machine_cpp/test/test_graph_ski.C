@@ -17,8 +17,11 @@ int main(void) {
   auto node_y = make_atom(arena, NodeTag::INT, 54, true);
   auto node_app_1 = make_app(arena, node_app, node_y);
   assert(arena.nodes.size() == 5);
-  reduce(node_app_1, arena);
-  //  cout << cursor.current << endl;
-  //auto node = get_node(arena, cursor.current);
-  //assert(root == node.id);
+  Cursor cursor;
+  set_cursor(cursor, node_app_1);
+  reduce(cursor, arena);
+  cout << cursor.current <<" ," << node_app_1 <<" "<< node_app <<endl;
+  auto& node = get_node(arena, cursor.current);
+  assert(node_app_1 == cursor.current);
+  assert(node.left == node_x);
 }

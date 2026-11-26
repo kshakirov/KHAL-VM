@@ -44,4 +44,4 @@ Node &get_node(Arena &arena, NodeId id);
 void set_cursor(Cursor &cursor, NodeId id);
 void move_left(Cursor &cursor, const Arena &arena);
 void move_right(Cursor &cursor, const Arena &arena);
-void reduce(NodeId first,  Arena& arena);
+void reduce(Cursor& cursor,  Arena& arena);

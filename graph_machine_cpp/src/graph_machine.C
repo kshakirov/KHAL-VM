@@ -40,16 +40,17 @@ void move_right(Cursor &cursor, const Arena &arena) {
   cursor.current = node.right;
 }
 
-void reduce(NodeId first, Arena& arena){
+void reduce(Cursor& cursor, Arena& arena){
   int i = 0;
   auto state = State::DESCENDING;
-  Cursor cursor;
+  //Cursor cursor;
   auto wip = true;
   NodeId parent;
-  auto root = first;
+  auto root = cursor.current;
   parent = root;
-  auto reduct = no_node;
-  set_cursor(cursor, root);
+  //auto reduct = no_node;
+  auto use_i_reduct = false;
+  //set_cursor(cursor, root);
   while (i < 5 && wip) {
     auto& node = get_node(arena, cursor.current);
     switch (state) {
@@ -65,6 +66,7 @@ void reduce(NodeId first, Arena& arena){
       case NodeTag::I: {
         node.back = parent;
         set_cursor(cursor, node.back);
+	use_i_reduct = true;
         state = ASCENDING;
         std::cout << "I getting back to APP" << std::endl;
         break;
@@ -81,12 +83,17 @@ void reduce(NodeId first, Arena& arena){
     case ASCENDING: {
       switch (node.tag) {
       case NodeTag::APP: {
-        reduct = node.right;
+	if(use_i_reduct && node.id != root){
+	  auto& outer = get_node(arena, node.back);
+	  outer.left = node.right;
+	  use_i_reduct = false;
+	}
 
 
-        if (node.id == root) {
-          root = reduct;
+        if (node.id == root && use_i_reduct) {
+          root = node.right;
           wip = false;
+	  use_i_reduct = false; 
           set_cursor(cursor, root);
         } else {
           set_cursor(cursor, node.back);
